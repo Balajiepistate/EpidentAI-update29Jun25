@@ -8,7 +8,6 @@ app.secret_key = 'your_secret_key'
 UPLOAD_FOLDER = 'static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Database setup
 def init_db():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
@@ -80,11 +79,9 @@ def upload():
             file.save(filepath)
             uploaded_file_paths.append(filepath)
 
-            # Simulated AI insight for each image
             insight = f"Suspicious region detected in {filename} for {patient_name}. Suggested clinical correlation."
             ai_insights_list.append(insight)
 
-    # Dummy logic for cost and education text based on area and language
     cost = 2000 if area == "Urban" else 1500
     education_text = "Please maintain good oral hygiene." if language == "English" else "कृपया अच्छी मौखिक स्वच्छता बनाए रखें।"
 
@@ -103,4 +100,3 @@ def upload():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
