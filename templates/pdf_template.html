@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Treatment Plan for {{ patient_name }}</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  h1 { color: #2a7ae2; }
+  img { max-width: 100%; margin-top: 10px; }
+  .section { margin-bottom: 20px; }
+</style>
+</head>
+<body>
+  <h1>Epident AI - Treatment Plan</h1>
+  <div class="section"><strong>Patient Name:</strong> {{ patient_name }}</div>
+  <div class="section"><strong>Mobile:</strong> {{ mobile }}</div>
+  <div class="section"><strong>Suggested Treatment Plan:</strong> {{ ai_insights }}</div>
+  <div class="section"><strong>Cost Estimate:</strong> ₹{{ cost }}</div>
+  <div class="section"><strong>Area:</strong> {{ area }}</div>
+  <div class="section"><strong>Language:</strong> {{ language }}</div>
+  <div class="section"><strong>Patient Education:</strong> {{ education_text }}</div>
+  {% if image_path %}
+  <div class="section">
+    <img src="{{ image_path }}" alt="Patient Image" />
+  </div>
+  {% endif %}
+</body>
+</html>
