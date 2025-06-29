@@ -12,7 +12,7 @@
 
     <div class="card mb-4 shadow">
       <div class="card-body">
-        <h5 class="card-title">Upload Dental X-ray or Intraoral Photo</h5>
+        <h5 class="card-title">Upload Dental X-ray or Intraoral Photos</h5>
         <form action="/upload" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
             <label class="form-label">Patient Name</label>
@@ -37,8 +37,8 @@
             </select>
           </div>
           <div class="mb-3">
-            <label class="form-label">Upload Image</label>
-            <input type="file" name="file" class="form-control" required />
+            <label class="form-label">Upload Images (multiple allowed)</label>
+            <input type="file" name="files" class="form-control" multiple required />
           </div>
           <button type="submit" class="btn btn-success">Upload and Analyze</button>
         </form>
@@ -60,17 +60,18 @@
       <div class="alert alert-danger">{{ error }}</div>
     {% endif %}
 
-    {% if image_path %}
+    {% if image_paths %}
     <div class="card mt-4">
       <div class="card-body">
-        <h5 class="card-title">Image Preview</h5>
-        <img src="{{ image_path }}" class="img-fluid rounded border" alt="Uploaded Image" />
+        <h5 class="card-title">Image Previews</h5>
+        {% for path in image_paths %}
+          <img src="{{ path }}" class="img-fluid rounded border mb-3" alt="Uploaded Image" />
+        {% endfor %}
 
-        {% if ai_insights %}
-        <div class="alert alert-info mt-3">
-          <strong>Suggested Treatment Plan for {{ patient_name }}:</strong> {{ ai_insights }}
-        </div>
-        {% endif %}
+        <h5 class="mt-3">Suggested Treatment Plans</h5>
+        {% for insight in ai_insights_list %}
+          <div class="alert alert-info">{{ insight }}</div>
+        {% endfor %}
 
         <p><strong>Mobile:</strong> {{ mobile }}</p>
         <p><strong>Cost Estimate:</strong> ₹{{ cost }}</p>
@@ -79,12 +80,12 @@
         <form action="/export-pdf" method="POST" style="display:inline-block;">
           <input type="hidden" name="patient_name" value="{{ patient_name }}" />
           <input type="hidden" name="mobile" value="{{ mobile }}" />
-          <input type="hidden" name="ai_insights" value="{{ ai_insights }}" />
+          <input type="hidden" name="ai_insights" value="{{ ', '.join(ai_insights_list) }}" />
           <input type="hidden" name="education_text" value="{{ education_text }}" />
           <input type="hidden" name="cost" value="{{ cost }}" />
           <input type="hidden" name="language" value="{{ language }}" />
           <input type="hidden" name="area" value="{{ area }}" />
-          <input type="hidden" name="image_path" value="{{ image_path }}" />
+          <input type="hidden" name="image_paths" value="{{ ','.join(image_paths) }}" />
           <button type="submit" class="btn btn-primary">Export as PDF</button>
         </form>
 
