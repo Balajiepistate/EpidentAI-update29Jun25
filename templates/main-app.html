@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Epident AI – Dental Assistant</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="text-center text-primary mb-4">Welcome to Epident AI – Dental Assistant</h1>
+
+    <div class="card mb-4 shadow">
+      <div class="card-body">
+        <h5 class="card-title">Upload Dental X-ray or Intraoral Photo</h5>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">Patient Name</label>
+            <input type="text" name="patient_name" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Patient Mobile (WhatsApp)</label>
+            <input type="text" name="mobile" class="form-control" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Language</label>
+            <select name="language" class="form-select">
+              <option value="English" selected>English</option>
+              <option value="Regional">Regional</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Area</label>
+            <select name="area" class="form-select">
+              <option value="Urban" selected>Urban</option>
+              <option value="Rural">Rural</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Upload Image</label>
+            <input type="file" name="file" class="form-control" required />
+          </div>
+          <button type="submit" class="btn btn-success">Upload and Analyze</button>
+        </form>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert alert-warning">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if message %}
+      <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+    {% if error %}
+      <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    {% if image_path %}
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">Image Preview</h5>
+        <img src="{{ image_path }}" class="img-fluid rounded border" alt="Uploaded Image" />
+
+        {% if ai_insights %}
+        <div class="alert alert-info mt-3">
+          <strong>Suggested Treatment Plan for {{ patient_name }}:</strong> {{ ai_insights }}
+        </div>
+        {% endif %}
+
+        <p><strong>Mobile:</strong> {{ mobile }}</p>
+        <p><strong>Cost Estimate:</strong> ₹{{ cost }}</p>
+        <p><strong>Patient Education ({{ language }}):</strong> {{ education_text }}</p>
+
+        <form action="/export-pdf" method="POST" style="display:inline-block;">
+          <input type="hidden" name="patient_name" value="{{ patient_name }}" />
+          <input type="hidden" name="mobile" value="{{ mobile }}" />
+          <input type="hidden" name="ai_insights" value="{{ ai_insights }}" />
+          <input type="hidden" name="education_text" value="{{ education_text }}" />
+          <input type="hidden" name="cost" value="{{ cost }}" />
+          <input type="hidden" name="language" value="{{ language }}" />
+          <input type="hidden" name="area" value="{{ area }}" />
+          <input type="hidden" name="image_path" value="{{ image_path }}" />
+          <button type="submit" class="btn btn-primary">Export as PDF</button>
+        </form>
+
+        <form action="/simulate-whatsapp" method="POST" style="display:inline-block; margin-left:10px;">
+          <input type="hidden" name="mobile" value="{{ mobile }}" />
+          <input type="hidden" name="education_text" value="{{ education_text }}" />
+          <button type="submit" class="btn btn-info">Send Education via WhatsApp</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
